@@ -1,0 +1,28 @@
+<h1> <%= @user.username.capitalize %>'s todo lists:</h1>
+hardcoded into index.html.erb
+<div>
+	<ol>
+	<% @lists.each do |list| %>
+	
+		<li> <%= list.title %></li>
+		<ul>
+			<% list.todo_items.each do |item| %>
+			<li><%= item.name %></li>
+			<%  end %>
+		</ul>
+		<br>
+	
+	<% end %>
+	</ol>
+</div>
+<script type="application/json" id="lists">
+<%= @user.todo_lists.to_json(:include => :todo_items).html_safe %>
+</script>
+
+<script>
+
+</script>
+
+
+
+	
