@@ -21,11 +21,18 @@ Todo.UI = (function() {
 		this.listenForClicks();
 	};
 	
+	//make new <div> + add button for adding new lists
 	UI.prototype.makeMainDiv = function(){
 		var div = $("<div class='main-div'></div>")
 		var header = $('<h1>').html("Your Todo lists:");
+		var newListForm = this.addNewListForm();
+		div.append(newListForm);
 		div.prepend(header);
 		$('body').prepend(div);
+	}
+	
+	UI.prototype.addNewListForm = function() {
+		return $('<p>').html("FORM will be here");
 	}
 	
 	UI.prototype.renderTasks = function(){
@@ -37,7 +44,7 @@ Todo.UI = (function() {
 			var listTitle = list['todo_list']['title'];
 			var a = $('<a>').attr({'href' : '#'}).html(listTitle);
 			var uniqID = "link" + idx;
-			var li = $('<li>').attr({'id' : uniqID}).html(a);
+			var li = $('<li>').attr({'id' : uniqID, 'class' : 'not-clicked'}).html(a);
 			div.append(li);
 			ol.append(div);
 		});
@@ -46,16 +53,30 @@ Todo.UI = (function() {
 	
 	UI.prototype.listenForClicks = function(){
 		var that = this;
-		$('.todo-list').click(function() {
-			var div = this;
-			var divOflistItems = that.listTodoItems($(div).attr('id'));
-			$(this).append(divOflistItems);
+		$('.todo-list').children().click(function() { 
+			//here 'this' is <li>
+			var div = $(this).parent();
+			
+			if ($(this).attr('class') === 'not-clicked'){
+				var divOflistItems = that.listTodoItems($(div).attr('id'));
+				$(this).append(divOflistItems);
+				$(this).removeClass('not-clicked');
+				$(this).addClass('clicked');
+			} else if ($(this).attr('class') === 'clicked') {
+				console.log("it's working");
+				$(this).removeClass('clicked');
+				$(this).addClass('not-clicked');
+				var items = $(this).children(); // an array [<a>, <div>]
+				console.log(items);
+				$(items[1]).remove();
+			}
 		});
 	};
 	
 	UI.prototype.listTodoItems = function(divID) {
 		var div = $("id");
-		var newDiv = $('<div>');
+		var newDivClass = "list-items-" + divID;
+		var newDiv = $('<div>').attr('class', newDivClass);
 		var that = this;
 		var todoItemsArray = that.tasks[divID]['todo_list']['todo_items'];
 		var ul = $("<ul>");

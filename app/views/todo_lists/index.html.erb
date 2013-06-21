@@ -1,5 +1,5 @@
-<h1> <%= @user.username.capitalize %>'s todo lists:</h1>
-hardcoded into index.html.erb
+<!-- <h1> <%#= @user.username.capitalize %>'s todo lists:</h1> -->
+<!-- hardcoded into index.html.erb
 <div>
 	<ol>
 	<% @lists.each do |list| %>
@@ -14,15 +14,18 @@ hardcoded into index.html.erb
 	
 	<% end %>
 	</ol>
-</div>
+</div> -->
+
+<%= form_for(@list, :remote => true) do |f| %>
+	<%= f.label :title, "New list" %>:
+	<%= f.text_field :title %>
+	<br>
+	<%= f.submit %>
+<% end %>
+
 <script type="application/json" id="lists">
+<% ActiveRecord::Base.include_root_in_json = true %>
 <%= @user.todo_lists.to_json(:include => :todo_items).html_safe %>
 </script>
-
-<script>
-
-</script>
-
-
 
 	
