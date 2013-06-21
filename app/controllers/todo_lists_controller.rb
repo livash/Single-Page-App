@@ -7,7 +7,7 @@ class TodoListsController < ApplicationController
   end
   
   def create
-    @list = TodoList.new(params[:list])
+    @list = TodoList.new(params[:todo_list])
     current_user.todo_lists << @list
     render :json => @list
   end
