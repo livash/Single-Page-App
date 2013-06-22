@@ -19,25 +19,20 @@ Todo.UI = (function() {
 		this.makeMainDiv();
 		this.renderTasks();
 		this.listenForClicks();
+		this.listenAJAX();
 	};
 	
 	//make new <div> + add button for adding new lists
 	UI.prototype.makeMainDiv = function(){
 		var div = $("<div class='main-div'></div>")
 		var header = $('<h1>').html("Your Todo lists:");
-		var newListForm = this.addNewListForm();
-		div.append(newListForm);
 		div.prepend(header);
 		$('body').prepend(div);
 	}
 	
-	UI.prototype.addNewListForm = function() {
-		return $('<p>').html("FORM will be here");
-	}
-	
 	UI.prototype.renderTasks = function(){
 		var that = this;
-		var ol = $('<ol>');
+		var ol = $('<ol>').addClass('ordered-list');
 
 		that.tasks.forEach(function(list, idx){
 			var div = $('<div>').attr({'class' : 'todo-list', 'id' : idx});
@@ -50,6 +45,7 @@ Todo.UI = (function() {
 		});
 		$('.main-div').append(ol);
 	};
+	
 	
 	UI.prototype.listenForClicks = function(){
 		var that = this;
@@ -72,6 +68,20 @@ Todo.UI = (function() {
 			}
 		});
 	};
+	
+	UI.prototype.listenAJAX = function() {
+		$('.new_todo_list').on('ajax:success', function(event, data) {
+			var ol = $('.ordered-list');
+			var idx = $(ol).children().length + 1;
+			var div = $('<div>').attr({'class' : 'todo-list', 'id' : idx});
+			var listTitle = data['todo_list']['title'];
+			var a = $('<a>').attr({'href' : '#'}).html(listTitle);
+			var uniqID = "link" + idx;
+			var li = $('<li>').attr({'id' : uniqID, 'class' : 'not-clicked'}).html(a);
+			div.append(li);
+			ol.append(div);
+		});
+	}
 	
 	UI.prototype.listTodoItems = function(divID) {
 		var div = $("id");
